@@ -1,0 +1,30 @@
+{
+    "filters" : [
+        {
+            "and": {
+                "column_name": "ACTUAL_INSP_DATE",
+                "column_data_type": "date",
+                "condition": [
+                    {
+                        "and": {
+                            "greater": "2019-06-30"
+                        }
+                    }
+                ]   
+            }
+        },
+        {
+            "and": {
+                "column_name": "COMPANY_NAME",
+                "column_data_type": "string",
+                "condition": [
+                    {
+                        "and": {
+                            "contains": "footwear"
+                        }
+                    }
+                ]   
+            }
+        }
+    ]
+}
