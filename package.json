@@ -2,7 +2,7 @@
   "name": "yvonne_tool",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,8 @@
   "dependencies": {
     "csv-parser": "^2.3.0",
     "csv-reader": "^1.0.3",
-    "csv-writer": "^1.5.0"
+    "csv-writer": "^1.5.0",
+    "esm": "^3.2.25",
+    "strip-bom-stream": "^4.0.0"
   }
 }

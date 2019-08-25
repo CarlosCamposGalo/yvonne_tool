@@ -3,22 +3,21 @@
         {
             "column_name": "ACTUAL_INSP_DATE",
             "column_data_type": "date",
-            "condition": [
+            "conditions": [
                 {
-                    "and": {
-                        "greater": "2019-06-30"
-                    }
-                }
-            ]   
-        },
-        {
-            "column_name": "COMPANY_NAME",
-            "column_data_type": "string",
-            "condition": [
-                {
-                    "and": {
-                        "contains": "footwear"
-                    }
+                    "conditional": null,
+                    "compares": [
+                        {
+                            "conditional": null,
+                            "operator" : ">",
+                            "operand": "2019-07-11"
+                        },
+                        {
+                            "conditional": "&&",
+                            "operator" : "<",
+                            "operand": "2019-07-13"
+                        }
+                    ]
                 }
             ]   
         }

@@ -1,13 +1,15 @@
-const csv_parser = require('csv-parser')
-const fs = require('fs')
+import csv_parser from 'csv-parser'
+import fs from 'fs'
+import stripBomStream from 'strip-bom-stream'
+import filter from './src/filter'
+import conf from './config/extraction.json'
 
-const app = () => {
-    
-fs.createReadStream('data.csv')
-    .pipe(csv())
-    .on('data', (data) => results.push(data))
+const MAIN = () => {
+fs.createReadStream('/media/carldrive/Downloads/MRP_COMPLETED_ORDERS_EXPORT.csv')
+    .pipe(stripBomStream())
+    .pipe(csv_parser())
+    .on('data', (data) => {if(filter(conf.filters)(data)) console.log(data)})
     .on('end', () => {
-    console.log(results);
     // [
     //   { NAME: 'Daffy Duck', AGE: '24' },
     //   { NAME: 'Bugs Bunny', AGE: '22' }
@@ -15,4 +17,4 @@ fs.createReadStream('data.csv')
     });
 }
 
-export default app
+MAIN()
