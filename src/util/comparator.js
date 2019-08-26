@@ -1,12 +1,6 @@
 
 const fn = (operator) => {
     switch(operator) {
-        case "-":
-            return (param1, param2) => param1 - param2;
-        case "*":
-            return (param1, param2) => param1 * param2;
-        case "/":
-            return (param1, param2) => param1 / param2;
         case "<":
             return (param1, param2) => param1 < param2;
         case ">":
@@ -15,12 +9,14 @@ const fn = (operator) => {
             return (param1, param2) => param1 <= param2;
         case ">=":
             return (param1, param2) => param1 >= param2;
-        case "+":
-            return (param1, param2) => param1 + param2;
         case "===":
-                return (param1, param2) => param1 === param2;
+            return (param1, param2) => param1 === param2;
+        case "startswith":
+            return (param1, param2) => param1.startsWith(param2);
+        case "endswith":
+                return (param1, param2) => param1.endsWith(param2); 
         default:
-            return (param1, param2) => param1 + param2;
+            return (param1, param2) => param1 === param2;
     }
 }
 
@@ -38,6 +34,10 @@ const comparatorfactory = (data_type, operator) => {
     if (data_type_lowercased === 'date') {
         return date_comparator(operator)
     }
+
+    return (param1, param2) => {
+        return fn(operator)(param1, param2)
+    } 
 }
 
 export default comparatorfactory

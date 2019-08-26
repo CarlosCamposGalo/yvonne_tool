@@ -19,7 +19,6 @@ const filter = (filtersconf) => {
                     const comparatorFn = ComparatorFactory(col_data_type, compare.operator)
                     const compare_conditionalFn = ConditionalFactory(compare.conditional)
                     const castFn = CastFactory(col_data_type)
-                    //console.log(castFn(row[col_name]), castFn(compare.operand),compare.operator, comparatorFn(castFn(row[col_name]), castFn(compare.operand)))
                     conditionResult = compare_conditionalFn(comparatorFn(castFn(row[col_name]), castFn(compare.operand)), conditionResult)
                 }
                 const condition_conditionalFn = ConditionalFactory(condition.conditional)

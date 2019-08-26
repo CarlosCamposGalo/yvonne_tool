@@ -1,4 +1,12 @@
 {
+    "input": {
+        "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
+        "dir": "/media/carldrive/Downloads"
+    },
+    "output": {
+        "filename": "output1.csv",
+        "dir": "/tmp"
+    },
     "filters" : [
         {
             "column_name": "ACTUAL_INSP_DATE",
@@ -10,12 +18,33 @@
                         {
                             "conditional": null,
                             "operator" : ">",
-                            "operand": "2019-07-11"
+                            "operand": "2019-06-30 00:00:00"
                         },
                         {
                             "conditional": "&&",
                             "operator" : "<",
-                            "operand": "2019-07-13"
+                            "operand": "2019-08-01 00:00:00"
+                        }
+                    ]
+                }
+            ]   
+        },
+        {
+            "column_name": "COMPANY_NAME",
+            "column_data_type": "String",
+            "conditions": [
+                {
+                    "conditional": "&&",
+                    "compares": [
+                        {
+                            "conditional": "||",
+                            "operator" : "startswith",
+                            "operand": "Mr Price"
+                        },
+                        {
+                            "conditional": "&&",
+                            "operator" : "endswith",
+                            "operand": "Footwear"
                         }
                     ]
                 }
