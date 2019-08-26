@@ -7,9 +7,7 @@ import extractionconf from './config/extraction.json'
 
 
 const HANDLE = (data) => {
-    
     if(filter(extractionconf.filters)(data)) {
-        console.log("Row data extracted...")
         const path = `${extractionconf.output.dir}/${extractionconf.output.filename}`
         const writer = csvWriterInstances.build(path, Object.keys(data).map((key)=>{return {id: key, title: key}}))
         writer.writeRecords(data)
@@ -18,13 +16,23 @@ const HANDLE = (data) => {
 
 
 const MAIN = () => {
-    console.log("SRC file:", extractionconf.input.dir + '/' + extractionconf.input.filename)
-    fs.createReadStream(extractionconf.input.dir + '/' + extractionconf.input.filename)
+    
+    const destPath = extractionconf.output.dir + '/' + extractionconf.output.filename
+    const srcPath = extractionconf.input.dir + '/' + extractionconf.input.filename
+
+    console.log("SRC file:", srcPath)
+    console.log("DEST file:", destPath)
+
+    if(fs.existsSync(destPath)) {
+        fs.unlinkSync(destPath)
+        console.log(`Deleted destination path: ${destPath}`)
+    }
+   
+    fs.createReadStream(srcPath)
     .pipe(stripBomStream())
     .pipe(csv_parser())
     .on('data', HANDLE)
-    .on('end', () => {
-    });
+    .on('end', () => csvWriterInstances.finalize());
 }
 
 MAIN()

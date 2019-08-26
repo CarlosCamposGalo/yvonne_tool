@@ -29,15 +29,23 @@ const date_comparator = (operator) => {
     
 }
 
+const string_comparator = (operator) => {
+    return (param1, param2) => {
+        const param1Time = param1.toLowerCase()
+        const param2Time = param2.toLowerCase()
+        return fn(operator)(param1Time, param2Time)
+    }
+    
+}
+
 const comparatorfactory = (data_type, operator) => {
     const data_type_lowercased = data_type.toLowerCase();
+    const operator_lowercased = operator.toLowerCase();
     if (data_type_lowercased === 'date') {
-        return date_comparator(operator)
+        return date_comparator(operator_lowercased)
     }
 
-    return (param1, param2) => {
-        return fn(operator)(param1, param2)
-    } 
+    return string_comparator(operator_lowercased)
 }
 
 export default comparatorfactory
