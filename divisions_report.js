@@ -1,10 +1,20 @@
 import csv_parser from 'csv-parser'
 import fs from 'fs'
 import stripBomStream from 'strip-bom-stream'
+import glob from 'glob'
+import path from 'path'
 import filter from './src/filter'
 import csvWriterInstances from './src/csvWriters'
-import divisions from './config/divisions'
 
+
+const LOAD_DIVISIONS = () => {
+    const divisions = []
+    glob.sync( './config/extractions/divisions/**/*.json' ).forEach(( file ) => { 
+        const division = require(path.resolve( file ))
+        divisions.push(division)
+    })
+    return divisions
+}
 
 const HANDLE = (extractionconf) => {
     return (data) => {
@@ -17,6 +27,7 @@ const HANDLE = (extractionconf) => {
 }
 
 const MAIN = () => {
+    const divisions = LOAD_DIVISIONS()
     for(const i in divisions) {
         const extractionconf = divisions[i]
         const destPath = `${extractionconf.output.dir}/${extractionconf.output.filename}`

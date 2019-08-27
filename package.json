@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node -r ./node_modules/esm/esm app.js",
+    "divisions_report": "node -r ./node_modules/esm/esm divisions_report.js",
+    "dr": "npm run divisions_report",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,6 +15,7 @@
     "csv-reader": "^1.0.3",
     "csv-writer": "^1.5.0",
     "esm": "^3.2.25",
+    "glob": "^7.1.4",
     "promise": "^8.0.3",
     "strip-bom-stream": "^4.0.0"
   }

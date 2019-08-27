@@ -47,7 +47,7 @@ class CsvWriter {
         return this.worker
     }
 
-    finalize(cb) {
+    finalize(cb=()=>{console.log("CSV write indeed.")}) {
         this.queue = false
         setTimeout(() => this.writeRecords(null).then(cb()), 1000)
     }
