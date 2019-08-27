@@ -1,11 +1,6 @@
 {
     "composite_keys": [
         "SUPPLIER_NAME"
-    ]
-}
-{
-    "composite_keys": [
-        "FACTORY_NAME"
     ],
     "populations": [
         {
@@ -18,31 +13,50 @@
                     }
                 ]
             }
-        },
-        {
-            "variable": "totalInspsPerSupplierAndFactory",
-            "populate": {
-                "name": "count",
-                 "filters": [
-                    {
-                        "key": "SUPPLIER_NAME"
-                    },
-                    {
-                        "key": "FACTORY_NAME"
-                    }
-                ]
-            }
         }
     ],
     "columns": [
-        {
-            "column_name": "# of POs",
-            "computation": [
-                {
-                    "fn": "assign",
-                    "args": [""]
+            {
+                "column_name": "# of POs",
+                "computation": [
+                    {
+                        "fn": "assign",
+                        "args": ["totalInspsPerSupplier"]
+                    }
+                ]
+            }
+    ],
+    "sub_rows": 
+    {
+        "composite_keys": [
+            "FACTORY_NAME"
+        ],
+        "populations": [
+            {
+                "variable": "totalInspsPerSupplierAndFactory",
+                "populate": {
+                    "name": "count",
+                    "filters": [
+                        {
+                            "key": "SUPPLIER_NAME"
+                        },
+                        {
+                            "key": "FACTORY_NAME"
+                        }
+                    ]
                 }
-            ]
-        }
-    ]
+            }
+        ],
+        "columns": [
+            {
+                "column_name": "# of POs",
+                "computation": [
+                    {
+                        "fn": "assign",
+                        "args": ["totalInspsPerSupplierAndFactory"]
+                    }
+                ]
+            }
+        ]
+    }
 }
