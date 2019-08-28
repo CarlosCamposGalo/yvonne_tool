@@ -1,0 +1,84 @@
+{
+    "composite_keys": [
+        "SUPPLIER_NAME"
+    ],
+    "populations": [
+        {
+            "variable_name": "totalInspsPerSupplier",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "SUPPLIER_NAME",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        }
+    ],
+    "columns": [
+        {
+            "column_name": "# of POs",
+            "column_data_type": "Number",
+            "column_value":[
+                {
+                    "operator": "+",
+                    "operand":  "<totalInspsPerSupplier>"
+                }
+            ]
+        }
+    ],
+    "sub_rows": 
+    {
+        "composite_keys": [
+            "FACTORY_NAME"
+        ],
+        "populations": [
+            {
+                "variable": "sumReportNo",
+                "filters": [
+                    {
+                        "column_name": "REPORT_NO",
+                        "column_data_type": "Number",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "!==",
+                                        "operand": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "operator": "+",
+                "operand": "<cell_value>"
+            }
+        ],
+        "columns": [
+            {
+                "column_name": "# of POs",
+                "column_data_type": "Number",
+                "column_value":  {
+                    "operator": "+",
+                    "operand":  "<sumReportNo>"
+                }
+            }
+        ]
+    }
+}

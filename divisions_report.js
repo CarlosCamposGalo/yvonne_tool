@@ -3,13 +3,16 @@ import fs from 'fs'
 import stripBomStream from 'strip-bom-stream'
 import glob from 'glob'
 import path from 'path'
-import filter from './src/filter'
+import filter from './src/filter_handler'
+import report from './src/report_handler'
 import csvWriterInstances from './src/csvWriters'
+
+import schema from  './config/report/division.json'
 
 
 const LOAD_DIVISIONS = () => {
     const divisions = []
-    glob.sync( './config/extractions/divisions/**/*.json' ).forEach(( file ) => { 
+    glob.sync( './config/filters/divisions/**/*.json' ).forEach(( file ) => { 
         const division = require(path.resolve( file ))
         divisions.push(division)
     })
@@ -48,6 +51,7 @@ const MAIN = () => {
         .on('end', () => csvWriterInstances.get(destPath)
             .finalize(()=>{
                 console.log(`CSV written to path ${destPath}`)
+                report(destPath, schema)
             })
         );
     }
