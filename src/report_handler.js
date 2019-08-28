@@ -15,7 +15,7 @@ class ExtractionUtil {
             target = target[row[keys[i]]]
         }
     }
-    populate(row, extract, populations){
+    populate(row_value, extract, populations){
         if(extract["variables"] === undefined) extract["variables"] = {}
         const variables = extract.variables
         for(let i in populations) {
@@ -23,10 +23,22 @@ class ExtractionUtil {
             if(variables[target.variable_name] === undefined) variables[target.variable_name] = target.variable_initial_value
             if(filter(target.filters)){
                 const fn = arithmetic(target.computation.operator)
-
-                variables[target.variable_name] = fn(variables[target.variable_name], target.computation.operand)
+                const operand_value = this.getValue(target.computation.operand, variables, row_value)
+                variables[target.variable_name] = fn(variables[target.variable_name], operand_value)
             }
         }
+    }
+    getValue(value, variables, row_value) {
+        if(typeof value === "string" && value.startsWith("<") && value.endsWith(">")) {
+            const identity = value.replace("<", "").replace(">", "").toLowerCase()
+            console.log("identity", identity)
+            if(identity === "cell_value"){
+                return row_value
+            } else {
+                return variables[identity]
+            }
+        }
+        return value
     }
 }
 
@@ -54,7 +66,7 @@ const extractData = (srcPath, schema) => {
     const HANDLE = (object) => {
         return (data) => {
             extractionUtil.addKeys(data, object, [schema.primary_key])
-            extractionUtil.populate(data, object[data[schema.primary_key]], schema.populations)
+            extractionUtil.populate(data[schema.primary_key], object[data[schema.primary_key]], schema.populations)
         }
     }
 
