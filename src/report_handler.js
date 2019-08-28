@@ -5,8 +5,8 @@ import stripBomStream from 'strip-bom-stream'
 import filter from './filter_handler'
 import arithmetic from './util/arithmetic'
 
-const extractionUtil = {
-    "addKeys": (row, extract, keys) => {
+class ExtractionUtil {
+    addKeys(row, extract, keys) {
         let target = extract
         for(let i in keys) {
             if(target[row[keys[i]]] === undefined) {
@@ -14,18 +14,17 @@ const extractionUtil = {
             }
             target = target[row[keys[i]]]
         }
-    },
-    "populate": (row, extract, populations) => {
+    }
+    populate(row, extract, populations){
         if(extract["variables"] === undefined) extract["variables"] = {}
         const variables = extract.variables
-        console.log(variables)
         for(let i in populations) {
             const target = populations[i]
-            
-            if(variables[target.variable] === undefined) variables[target.variable] = target.variable_initial_value
+            if(variables[target.variable_name] === undefined) variables[target.variable_name] = target.variable_initial_value
             if(filter(target.filters)){
                 const fn = arithmetic(target.computation.operator)
-                variables[target.variable] = fn(variables[target.variable], variables[target.variable].operand)
+
+                variables[target.variable_name] = fn(variables[target.variable_name], target.computation.operand)
             }
         }
     }
@@ -40,6 +39,7 @@ const extractionUtil = {
 const extractData = (srcPath, schema) => {
 
     const extractedData = {}
+    const extractionUtil = new ExtractionUtil()
 
     /**
      * {
@@ -53,8 +53,8 @@ const extractData = (srcPath, schema) => {
 
     const HANDLE = (object) => {
         return (data) => {
-            extractionUtil.addKeys(data, object, schema.composite_keys)
-            extractionUtil.populate(data, object, schema.populations)
+            extractionUtil.addKeys(data, object, [schema.primary_key])
+            extractionUtil.populate(data, object[data[schema.primary_key]], schema.populations)
         }
     }
 

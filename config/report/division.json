@@ -1,7 +1,5 @@
 {
-    "composite_keys": [
-        "SUPPLIER_NAME"
-    ],
+    "primary_key": "SUPPLIER_NAME",
     "populations": [
         {
             "variable_name": "totalInspsPerSupplier",
@@ -31,7 +29,7 @@
     ],
     "columns": [
         {
-            "column_name": "# of POs",
+            "column_name": "# of reports",
             "column_data_type": "Number",
             "column_value":[
                 {
@@ -43,16 +41,14 @@
     ],
     "sub_rows": 
     {
-        "composite_keys": [
-            "FACTORY_NAME"
-        ],
+        "primary_key": "FACTORY_NAME",
         "populations": [
             {
-                "variable": "sumReportNo",
+                "variable": "totalInspsPerSupplierAndFactory",
                 "filters": [
                     {
-                        "column_name": "REPORT_NO",
-                        "column_data_type": "Number",
+                        "column_name": "FACTORY_NAME",
+                        "column_data_type": "String",
                         "conditions": [
                             {
                                 "conditional": null,
@@ -66,18 +62,22 @@
                         ]
                     }
                 ],
-                "operator": "+",
-                "operand": "<cell_value>"
+                "computation": {
+                    "operator": "+",
+                    "operand": 1
+                }
             }
         ],
         "columns": [
             {
-                "column_name": "# of POs",
+                "column_name": "# of reports",
                 "column_data_type": "Number",
-                "column_value":  {
-                    "operator": "+",
-                    "operand":  "<sumReportNo>"
-                }
+                "column_value": [
+                    {
+                        "operator": "+",
+                        "operand":  "<totalInspsPerSupplierAndFactory>"
+                    }
+                ]
             }
         ]
     }
