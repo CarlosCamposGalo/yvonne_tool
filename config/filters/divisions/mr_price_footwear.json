@@ -4,7 +4,7 @@
     "dir": "\/home\/carlos\/Downloads"
   },
   "output": {
-    "filename": "output1.csv",
+    "filename": "output2.csv",
     "dir": "\/tmp"
   },
   "filters": [

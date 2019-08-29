@@ -5,7 +5,7 @@
             "table": "division.json"
         },
         {
-            "worksheet": "non_south_africa_sheet.json",
+            "worksheet": "south_africa_sheet.json",
             "table": "division.json"
         }
     ]
