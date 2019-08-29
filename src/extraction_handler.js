@@ -26,7 +26,6 @@ class ExtractionUtil {
             if(filter(target.filters)){
                 const fn = arithmetic(target.computation.operator)
                 const operand_value = this.getValue(target.computation.operand, variables, data)
-                console.log("operand_value ", operand_value)
                 const castFn = CastFactory(target.variable_data_type)
                 variables[target.variable_name] = fn(castFn(variables[target.variable_name]), castFn(operand_value))
             }
@@ -51,40 +50,42 @@ class ExtractionUtil {
  * @param {*} schema 
  */
 const extractData = (srcPath, schema) => {
+    return new Promise((resolve, reject)=> {
+      let row_number = 1
+        const extractedData = {}
+        const extractionUtil = new ExtractionUtil()
 
-    let row_number = 1
-    const extractedData = {}
-    const extractionUtil = new ExtractionUtil()
-
-    /**
-     * {
-     *      "a_supplier_name": {
-     *          "variables": {
-     *            totalInspsPerSupplier: 0
-     *          },
-     *          "sub_row": {
-     *          }
-     *       }
-     * }
-     */
-    const HANDLE = (object) => {
-        return (data) => {
-            console.log("POPULATE data for row " + (++row_number), schema.primary_key + ": " + data[schema.primary_key], schema.sub_row.primary_key + ": " + data[schema.sub_row.primary_key])
-            extractionUtil.addKeys(data, object, [schema.primary_key])
-            extractionUtil.populate(data, object[data[schema.primary_key]], schema.populations)
-            extractionUtil.addKeys({"sub_row": "sub_row"},  object[data[schema.primary_key]], ["sub_row"])
-            extractionUtil.addKeys(data,  object[data[schema.primary_key]]["sub_row"], [schema.sub_row.primary_key])
-            extractionUtil.populate(data, object[data[schema.primary_key]]["sub_row"][data[schema.sub_row.primary_key]], schema.sub_row.populations)
+        /**
+         * {
+         *      "a_supplier_name": {
+         *          "variables": {
+         *            totalInspsPerSupplier: 0
+         *          },
+         *          "sub_row": {
+         *          }
+         *       }
+         * }
+         */
+        const HANDLE = (object) => {
+            return (data) => {
+                console.log(`${srcPath}: POPULATE ROW ` + (++row_number), schema.primary_key + ": " + data[schema.primary_key], schema.sub_row.primary_key + ": " + data[schema.sub_row.primary_key])
+                extractionUtil.addKeys(data, object, [schema.primary_key])
+                extractionUtil.populate(data, object[data[schema.primary_key]], schema.populations)
+                extractionUtil.addKeys({"sub_row": "sub_row"},  object[data[schema.primary_key]], ["sub_row"])
+                extractionUtil.addKeys(data,  object[data[schema.primary_key]]["sub_row"], [schema.sub_row.primary_key])
+                extractionUtil.populate(data, object[data[schema.primary_key]]["sub_row"][data[schema.sub_row.primary_key]], schema.sub_row.populations)
+            }
         }
-    }
 
-    fs.createReadStream(srcPath)
-    .pipe(stripBomStream())
-    .pipe(csv_parser())
-    .on('data', HANDLE(extractedData))
-    .on('end', () => {
-        console.log(JSON.stringify(extractedData))
-    });
+        fs.createReadStream(srcPath)
+        .pipe(stripBomStream())
+        .pipe(csv_parser())
+        .on('data', HANDLE(extractedData))
+        .on('end', () => {
+            console.log(`${srcPath}: EXTRACTION COMPLETE ******************************************* `)
+            resolve(extractedData)
+        });  
+    })
 }
 
 export default extractData
