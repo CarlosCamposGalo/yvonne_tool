@@ -1,0 +1,12 @@
+{
+    "worksheets": [
+        {
+            "worksheet": "non_south_africa_sheet.json",
+            "table": "division.json"
+        },
+        {
+            "worksheet": "non_south_africa_sheet.json",
+            "table": "division.json"
+        }
+    ]
+}

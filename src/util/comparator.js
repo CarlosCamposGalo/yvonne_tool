@@ -16,7 +16,11 @@ const fn = (operator) => {
         case "startswith":
             return (param1, param2) => param1.startsWith(param2);
         case "endswith":
-                return (param1, param2) => param1.endsWith(param2);
+             return (param1, param2) => param1.endsWith(param2);
+        case "contains":
+            return (param1, param2) => param1.toLowerCase().contains(param2.toLowerCase())
+        case "!contains":
+                return (param1, param2) => !param1.toLowerCase().contains(param2.toLowerCase())
         default:
             return (param1, param2) => param1 === param2;
     }

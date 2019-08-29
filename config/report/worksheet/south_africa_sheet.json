@@ -1,0 +1,20 @@
+{
+    "worksheet_name": "sa",
+    "filters": [
+        {
+            "column_name": "COMPANY_NAME",
+            "column_data_type": "string",
+            "conditions": [
+                {
+                    "conditional": null,
+                    "compares": [
+                        {
+                            "operator": "contains",
+                            "operand": "south africa"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
