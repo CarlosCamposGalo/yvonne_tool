@@ -18,12 +18,14 @@ class CsvWriter {
             this.chunk = this.records
             this.records = []
             console.log("Writing to file...")
-            return this.writer.writeRecords(this.chunk).then(()=>{
-                this.state = "ready"
-                this.worker = null
-                this.chunk = []
-                return Promise.resolve()
-            })
+            if(this.chunk.length)
+                return this.writer.writeRecords(this.chunk).then(()=>{
+                    this.state = "ready"
+                    this.worker = null
+                    this.chunk = []
+                    return Promise.resolve()
+                })
+            return Promise.resolve()
         } else { 
             return Promise.resolve()
         }
@@ -47,7 +49,7 @@ class CsvWriter {
         return this.worker
     }
 
-    finalize(cb=()=>{console.log("CSV write indeed.")}) {
+    finalize(cb=()=>{console.log("CSV write ended.")}) {
         this.queue = false
         setTimeout(() => this.writeRecords(null).then(cb()), 1000)
     }

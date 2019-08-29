@@ -3,6 +3,7 @@
     "populations": [
         {
             "variable_name": "totalInspsPerSupplier",
+            "variable_data_type": "Number",
             "variable_initial_value": 0,
             "filters": [
                 {
@@ -39,12 +40,14 @@
             ]
         }
     ],
-    "sub_rows": 
+    "sub_row": 
     {
         "primary_key": "FACTORY_NAME",
         "populations": [
             {
-                "variable": "totalInspsPerSupplierAndFactory",
+                "variable_name": "totalInspsPerSupplierAndFactory",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
                 "filters": [
                     {
                         "column_name": "FACTORY_NAME",
@@ -64,7 +67,7 @@
                 ],
                 "computation": {
                     "operator": "+",
-                    "operand": 1
+                    "operand": "[REPORT_NO]"
                 }
             }
         ],
