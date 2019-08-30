@@ -32,6 +32,7 @@
         {
             "column_name": "# of reports",
             "column_data_type": "Number",
+            "column_initial_value": 0,
             "column_value":[
                 {
                     "operator": "+",
