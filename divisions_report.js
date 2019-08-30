@@ -5,14 +5,15 @@ import glob from 'glob'
 import path from 'path'
 import filter from './src/filter_handler'
 import extraction from './src/extraction_handler'
+import report from './src/report_handler'
 import csvWriterInstances from './src/csvWriters'
 
-import schema from  './config/report/division.json'
+import workbook_schema from  './schema/report/workbook.json'
 
 
 const LOAD_DIVISIONS = () => {
     const divisions = []
-    glob.sync( './config/filters/divisions/**/*.json' ).forEach(( file ) => { 
+    glob.sync( './schema/filters/divisions/**/*.json' ).forEach(( file ) => { 
         const division = require(path.resolve( file ))
         divisions.push(division)
     })
@@ -52,7 +53,8 @@ const MAIN = () => {
             csvWriterInstances.get(destPath)
                 .finalize(()=>{
                     console.log(`CSV written to path ${destPath}`)
-                    extraction(destPath, schema)
+                    extraction(destPath, workbook_schema)
+                    //extraction(destPath, schema)
                 })
         );
     }

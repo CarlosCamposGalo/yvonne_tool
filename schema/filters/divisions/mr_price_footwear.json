@@ -1,7 +1,7 @@
 {
   "input": {
     "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
-    "dir": "\/home\/carlos\/Downloads"
+    "dir": "\/home\/carlosc\/Downloads"
   },
   "output": {
     "filename": "output2.csv",

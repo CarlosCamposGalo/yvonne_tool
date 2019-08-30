@@ -23,7 +23,7 @@ class ExtractionUtil {
         for(let i in populations) {
             const target = populations[i]
             if(variables[target.variable_name] === undefined) variables[target.variable_name] = target.variable_initial_value
-            if(filter(target.filters)){
+            if(filter(target.filters)(data)){
                 const fn = arithmetic(target.computation.operator)
                 const operand_value = this.getValue(target.computation.operand, variables, data)
                 const castFn = CastFactory(target.variable_data_type)
@@ -41,51 +41,80 @@ class ExtractionUtil {
         } 
         return value
     }
-}
+    extract(srcPath, page) {
+        return new Promise((resolve, reject)=> {
+            let row_number = 1
+            const extractedData = {}
 
-/**
- * Extract data as instructed by the scehma config from a csv file.
- * 
- * @param {*} path 
- * @param {*} schema 
- */
-const extractData = (srcPath, schema) => {
-    return new Promise((resolve, reject)=> {
-      let row_number = 1
-        const extractedData = {}
-        const extractionUtil = new ExtractionUtil()
-
-        /**
-         * {
-         *      "a_supplier_name": {
-         *          "variables": {
-         *            totalInspsPerSupplier: 0
-         *          },
-         *          "sub_row": {
-         *          }
-         *       }
-         * }
-         */
-        const HANDLE = (object) => {
-            return (data) => {
-                console.log(`${srcPath}: POPULATE ROW ` + (++row_number), schema.primary_key + ": " + data[schema.primary_key], schema.sub_row.primary_key + ": " + data[schema.sub_row.primary_key])
-                extractionUtil.addKeys(data, object, [schema.primary_key])
-                extractionUtil.populate(data, object[data[schema.primary_key]], schema.populations)
-                extractionUtil.addKeys({"sub_row": "sub_row"},  object[data[schema.primary_key]], ["sub_row"])
-                extractionUtil.addKeys(data,  object[data[schema.primary_key]]["sub_row"], [schema.sub_row.primary_key])
-                extractionUtil.populate(data, object[data[schema.primary_key]]["sub_row"][data[schema.sub_row.primary_key]], schema.sub_row.populations)
+            /**
+             * HANDLE the csv data to be interpreted with the following format below. 
+             * This format is necessary to transform data as expected.
+             * {
+             *      "a_supplier_name": {
+             *          "variables": {
+             *            totalInspsPerSupplier: 0
+             *          },
+             *          "sub_row": {
+             *              "a_factory_name": {
+             *                 "variables": {
+             *                  }
+             *              }
+             *          }
+             *       }
+             * }
+             */
+            const HANDLE = (object) => {
+                return (data) => {
+                    ++row_number
+                    if(filter(page.worksheet.filters)(data)) {
+                        const table = page.table
+                        console.log(`Source file: ${srcPath};Belongs to worksheet "${page.worksheet.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
+                        this.addKeys(data, object, [table.primary_key])
+                        this.populate(data, object[data[table.primary_key]], table.populations)
+                        this.addKeys({"sub_row": "sub_row"},  object[data[table.primary_key]], ["sub_row"])
+                        this.addKeys(data,  object[data[table.primary_key]]["sub_row"], [table.sub_row.primary_key])
+                        this.populate(data, object[data[table.primary_key]]["sub_row"][data[table.sub_row.primary_key]], table.sub_row.populations)
+                    }
+                }
             }
-        }
 
-        fs.createReadStream(srcPath)
-        .pipe(stripBomStream())
-        .pipe(csv_parser())
-        .on('data', HANDLE(extractedData))
-        .on('end', () => {
-            console.log(`${srcPath}: EXTRACTION COMPLETE ******************************************* `)
-            resolve(extractedData)
-        });  
-    })
+            fs.createReadStream(srcPath)
+            .pipe(stripBomStream())
+            .pipe(csv_parser())
+            .on('data', HANDLE(extractedData))
+            .on('end', () => {
+                console.log(`${srcPath}: EXTRACTION COMPLETE ******************************************* `)
+                console.log(JSON.stringify(extractedData))
+                resolve(extractedData)
+            });  
+        })
+    }
+
 }
 
-export default extractData
+
+class WorkbookUtil {
+    build(schema) {
+        const resultObj = {"worksheets":[]}
+        for(let i in schema.worksheets) {
+            const worksheetSchema = schema.worksheets[i].worksheet_path
+            const tableSchema = schema.worksheets[i].table_path
+            const worksheet = {
+                "worksheet": require(worksheetSchema),
+                "table": require(tableSchema)
+            }
+            resultObj.worksheets.push(worksheet)
+        }
+        return resultObj
+    }
+}
+
+
+export default (srcPath, workbook)=>{
+    const workbookUtil = new WorkbookUtil()
+    const workbookBluePrint = workbookUtil.build(workbook)
+    const extractionUtil = new ExtractionUtil()
+    for(let i in workbookBluePrint.worksheets) {
+        extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i])
+    }
+}

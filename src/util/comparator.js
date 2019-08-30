@@ -18,11 +18,11 @@ const fn = (operator) => {
         case "endswith":
              return (param1, param2) => param1.endsWith(param2);
         case "contains":
-            return (param1, param2) => param1.toLowerCase().contains(param2.toLowerCase())
+            return (param1, param2) => param1.toLowerCase().indexOf(param2.toLowerCase()) !== -1
         case "!contains":
-                return (param1, param2) => !param1.toLowerCase().contains(param2.toLowerCase())
+                return (param1, param2) => param1.toLowerCase().indexOf(param2.toLowerCase()) === -1
         default:
-            return (param1, param2) => param1 === param2;
+            return (param1, param2) => false;
     }
 }
 
