@@ -84,7 +84,6 @@ class ExtractionUtil {
             .on('data', HANDLE(extractedData))
             .on('end', () => {
                 console.log(`${srcPath}: EXTRACTION COMPLETE ******************************************* `)
-                console.log(JSON.stringify(extractedData))
                 resolve(extractedData)
             });  
         })
@@ -114,7 +113,13 @@ export default (srcPath, workbook)=>{
     const workbookUtil = new WorkbookUtil()
     const workbookBluePrint = workbookUtil.build(workbook)
     const extractionUtil = new ExtractionUtil()
+
+    const extractedWorksheetPromises = []
     for(let i in workbookBluePrint.worksheets) {
-        extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i])
+        extractedWorksheetPromises.push(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
     }
+
+    return Promise.all(extractedWorksheetPromises).then((extactedworksheets)=>{
+        console.log(JSON.stringify(extactedworksheets))
+    })
 }
