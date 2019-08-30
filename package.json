@@ -15,6 +15,7 @@
     "csv-reader": "^1.0.3",
     "csv-writer": "^1.5.0",
     "esm": "^3.2.25",
+    "exceljs": "^1.15.0",
     "glob": "^7.1.4",
     "promise": "^8.0.3",
     "strip-bom-stream": "^4.0.0"
