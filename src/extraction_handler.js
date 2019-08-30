@@ -41,8 +41,9 @@ class ExtractionUtil {
         } 
         return value
     }
-    extract(srcPath, page) {
+    extract(srcPath, worksheetBluePrint) {
         return new Promise((resolve, reject)=> {
+            console.log(` ${srcPath}: EXTRACTION START for worksheet ${worksheetBluePrint.worksheet_name}********************`)
             let row_number = 1
             const extractedData = {}
 
@@ -66,9 +67,9 @@ class ExtractionUtil {
             const HANDLE = (object) => {
                 return (data) => {
                     ++row_number
-                    if(filter(page.worksheet.filters)(data)) {
-                        const table = page.table
-                        console.log(`Source file: ${srcPath};Belongs to worksheet "${page.worksheet.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
+                    if(filter(worksheetBluePrint.filters)(data)) {
+                        const table = worksheetBluePrint.table
+                        console.log(`Source file: ${srcPath};Belongs to worksheet "${worksheetBluePrint.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
                         this.addKeys(data, object, [table.primary_key])
                         this.populate(data, object[data[table.primary_key]], table.populations)
                         this.addKeys({"sub_row": "sub_row"},  object[data[table.primary_key]], ["sub_row"])
@@ -83,9 +84,11 @@ class ExtractionUtil {
             .pipe(csv_parser())
             .on('data', HANDLE(extractedData))
             .on('end', () => {
-                console.log(`${srcPath}: EXTRACTION COMPLETE ******************************************* `)
+                console.log(`${srcPath}: Done parsing and start columnization of worksheet ${worksheetBluePrint.worksheet_name}`)
+                
+                console.log(`${srcPath}: EXTRACTION COMPLETE for worksheet ${worksheetBluePrint.worksheet_name} ******************************************* `)
                 resolve(extractedData)
-            });  
+            });
         })
     }
 
@@ -98,10 +101,8 @@ class WorkbookUtil {
         for(let i in schema.worksheets) {
             const worksheetSchema = schema.worksheets[i].worksheet_path
             const tableSchema = schema.worksheets[i].table_path
-            const worksheet = {
-                "worksheet": require(worksheetSchema),
-                "table": require(tableSchema)
-            }
+            const worksheet = require(worksheetSchema)
+            worksheet["table"] = require(tableSchema)
             resultObj.worksheets.push(worksheet)
         }
         return resultObj
@@ -112,6 +113,7 @@ class WorkbookUtil {
 export default (srcPath, workbook)=>{
     const workbookUtil = new WorkbookUtil()
     const workbookBluePrint = workbookUtil.build(workbook)
+    console.log(JSON.stringify(workbookBluePrint))
     const extractionUtil = new ExtractionUtil()
 
     const extractedWorksheetPromises = []
@@ -119,7 +121,13 @@ export default (srcPath, workbook)=>{
         extractedWorksheetPromises.push(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
     }
 
-    return Promise.all(extractedWorksheetPromises).then((extactedworksheets)=>{
-        console.log(JSON.stringify(extactedworksheets))
+    return Promise.all(extractedWorksheetPromises).then((extractedWorksheets)=>{
+        return {
+            "creator": workbook.creator,
+            "lastModifiedBy": workbook.lastModifiedBy,
+            "created": new Date(),
+            "modified": new Date(),
+            "worksheets": extractedWorksheets
+        }
     })
 }
