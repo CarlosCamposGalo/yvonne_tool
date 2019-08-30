@@ -32,17 +32,21 @@ class ExtractionUtil {
         }
     }
     getValue(value, variables, data) {
+        /** Get value of the variable from extraction */
         if(typeof value === "string" && value.startsWith("<") && value.endsWith(">")) {
             const identity = value.substring(1, value.length-1)
             return variables[identity]
-        } else if(typeof value === "string" && value.startsWith("[") && value.endsWith("]")){
+        }
+        /** Get value from the cell */
+        else if(typeof value === "string" && value.startsWith("[") && value.endsWith("]")){
             const identity = value.substring(1, value.length-1)
             return data[identity]
-        } 
+        }
+        /**Else return the value */
         return value
     }
     extract(srcPath, worksheetBluePrint) {
-        return new Promise((resolve, reject)=> {
+             new Promise((resolve, reject)=> {
             console.log(` ${srcPath}: EXTRACTION START for worksheet ${worksheetBluePrint.worksheet_name}********************`)
             let row_number = 1
             const extractedData = {}
@@ -89,11 +93,15 @@ class ExtractionUtil {
             });
         })
     }
+    consolidate(worksheetBluePrint, extractedWorksheet) {
+        const consolidated_worksheet = {}
+        
 
+    }
 }
 
 
-class WorkbookUtil {
+class WorkbookBluePrintUtil {
     build(schema) {
         const resultObj = {"worksheets":[]}
         for(let i in schema.worksheets) {
@@ -108,12 +116,11 @@ class WorkbookUtil {
 }
 
 
-export default (srcPath, workbook)=>{
-    const workbookUtil = new WorkbookUtil()
-    const workbookBluePrint = workbookUtil.build(workbook)
-    console.log(JSON.stringify(workbookBluePrint))
+export default (srcPath, workbook_schema)=>{
+    const workbookBluePrintUtil = new WorkbookBluePrintUtil()
     const extractionUtil = new ExtractionUtil()
 
+    const workbookBluePrint = workbookBluePrintUtil.build(workbook_schema)
     const extractedWorksheetPromises = []
     for(let i in workbookBluePrint.worksheets) {
         extractedWorksheetPromises.push(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
@@ -121,8 +128,8 @@ export default (srcPath, workbook)=>{
 
     return Promise.all(extractedWorksheetPromises).then((extractedWorksheets)=>{
         return {
-            "creator": workbook.creator,
-            "lastModifiedBy": workbook.lastModifiedBy,
+            "creator": workbook_schema.creator,
+            "lastModifiedBy": workbook_schema.lastModifiedBy,
             "created": new Date(),
             "modified": new Date(),
             "worksheets": extractedWorksheets
