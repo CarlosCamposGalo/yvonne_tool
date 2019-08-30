@@ -60,14 +60,6 @@ class CsvWritersHandler {
         this.instances = []
     }
 
-    finalize() {
-        this.instances.forEach(el=> {
-            el.writer.finalize(()=>{
-                console.log(`CSV written to path ${el.key}`)
-            })
-        })
-    }
-
     get(key) {
         const instance = this.instances.find((el)=>{
             return el.key.toLowerCase() === key.toLowerCase()
@@ -89,6 +81,15 @@ class CsvWritersHandler {
             return instance_writer
         }
     }
+
+    finalize() {
+        this.instances.forEach(el=> {
+            el.writer.finalize(()=>{
+                console.log(`CSV written to path ${el.key}`)
+            })
+        })
+    }
+
 }
 
 export default new CsvWritersHandler()

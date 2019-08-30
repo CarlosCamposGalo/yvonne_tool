@@ -3,10 +3,10 @@ import fs from 'fs'
 import stripBomStream from 'strip-bom-stream'
 import glob from 'glob'
 import path from 'path'
-import filter from './src/filter_handler'
-import extraction from './src/extraction_handler'
+import filter from './src/handler/filter_handler'
+import extraction from './src/handler/extraction_handler'
 //import report from './src/workbook_handler'
-import csvWriterInstances from './src/csvWriters'
+import csvWriterInstances from './src/util/csvWriters'
 
 import workbook_schema from  './schema/report/workbook.json'
 

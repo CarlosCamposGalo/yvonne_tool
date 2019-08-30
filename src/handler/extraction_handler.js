@@ -3,8 +3,8 @@ import csv_parser from 'csv-parser'
 import fs from 'fs'
 import stripBomStream from 'strip-bom-stream'
 import filter from './filter_handler'
-import {CastFactory} from './util/datatype'
-import arithmetic from './util/arithmetic'
+import {CastFactory} from '../operation/datatype'
+import arithmetic from '../operation/arithmetic'
 
 class ExtractionUtil {
     addKeys(row, extract, keys) {
@@ -84,8 +84,6 @@ class ExtractionUtil {
             .pipe(csv_parser())
             .on('data', HANDLE(extractedData))
             .on('end', () => {
-                console.log(`${srcPath}: Done parsing and start columnization of worksheet ${worksheetBluePrint.worksheet_name}`)
-                
                 console.log(`${srcPath}: EXTRACTION COMPLETE for worksheet ${worksheetBluePrint.worksheet_name} ******************************************* `)
                 resolve(extractedData)
             });

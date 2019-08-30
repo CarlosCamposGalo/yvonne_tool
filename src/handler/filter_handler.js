@@ -1,6 +1,6 @@
-import ComparatorFactory from './util/comparator'
-import ConditionalFactory from './util/conditional'
-import {CastFactory} from './util/datatype'
+import ComparatorFactory from '../operation/comparator'
+import ConditionalFactory from '../operation/conditional'
+import {CastFactory} from '../operation/datatype'
 
 const filter = (filtersconf) => {
     return (row) => {
