@@ -30,6 +30,17 @@
     ],
     "columns": [
         {
+            "column_name": "Supplier Name",
+            "column_data_type": "String",
+            "column_initial_value": "",
+            "column_value":[
+                {
+                    "operator": "+",
+                    "operand":  "[SUPPLIER_NAME]"
+                }
+            ]
+        },
+        {
             "column_name": "# of reports",
             "column_data_type": "Number",
             "column_initial_value": 0,

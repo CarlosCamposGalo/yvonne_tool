@@ -5,7 +5,7 @@ import glob from 'glob'
 import path from 'path'
 import filter from './src/handler/filter_handler'
 import extraction from './src/handler/extraction_handler'
-//import report from './src/workbook_handler'
+import report from './src/handler/report_handler'
 import csvWriterInstances from './src/util/csvWriters'
 
 import workbook_schema from  './schema/report/workbook.json'
@@ -53,8 +53,11 @@ const MAIN = () => {
             csvWriterInstances.get(destPath)
                 .finalize(()=>{
                     console.log(`CSV written to path ${destPath}`)
-                    extraction(destPath, workbook_schema)
-                    //extraction(destPath, schema)
+                    extraction(destPath, workbook_schema).then((consolidatedExtractedWorkbook)=>{
+                        report(consolidatedExtractedWorkbook, "/tmp/output.xls").then(()=>{
+                            console.log("Done write of log")
+                        })
+                    })
                 })
         );
     }

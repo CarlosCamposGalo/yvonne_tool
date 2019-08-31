@@ -94,7 +94,7 @@ class ExtractionUtil {
         })
     }
     consolidate(worksheetBluePrint, extractedWorksheet) {
-        const consolidated_worksheet = {columns:[], rows:[]}
+        const consolidated_worksheet = {worksheet_name: worksheetBluePrint.worksheet_name, columns:[], rows:[]}
         
         const columnsBluePrint = worksheetBluePrint.table.columns
         /**
@@ -115,7 +115,7 @@ class ExtractionUtil {
             columnBluePrint.id = new Date().getTime()
             const column = {
                 header: columnBluePrint.column_name,
-                id: columnBluePrint.id
+                key: `${columnBluePrint.id}`
             }
             consolidated_worksheet.columns.push(column)
         }
@@ -137,7 +137,7 @@ class ExtractionUtil {
                         let opr = columnBluePrint.column_value[j]
                         //console.log(opr)
                         const fn = arithmetic(opr.operator)
-                        const operand_value = this.getValue(opr.operand, variables, {})
+                        const operand_value = this.getValue(opr.operand, variables, {"SUPPLIER_NAME": key})
                         const castFn = CastFactory(columnBluePrint.column_data_type)
                         //console.log("Operand ", operand_value, row[columnBluePrint.id])
                         row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
@@ -147,8 +147,8 @@ class ExtractionUtil {
             }
         }
 
-        console.log(consolidated_worksheet)
-
+        // console.log(consolidated_worksheet)
+        return consolidated_worksheet
         
 
     }
@@ -181,11 +181,11 @@ export default (srcPath, workbook_schema)=>{
             return Promise.resolve(extractionUtil.consolidate(workbookBluePrint.worksheets[i], extractWorksheet))
         })
         //console.log(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
-        extractedWorksheetPromises.push(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
+        extractedWorksheetPromises.push(ps)
     }
 
     return Promise.all(extractedWorksheetPromises).then((extractedWorksheets)=>{
-        //extractionUtil.consolidate(extractedWorksheets)
+       // console.log(extractedWorksheets)
         return {
             "creator": workbook_schema.creator,
             "lastModifiedBy": workbook_schema.lastModifiedBy,
