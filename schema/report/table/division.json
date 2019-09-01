@@ -26,6 +26,32 @@
                     "operator": "+",
                     "operand": 1
             }
+        },
+        {
+            "variable_name": "totalProdQty",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "SUPPLIER_NAME",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": "[PROD_QUANTITY]"
+            }
         }
     ],
     "columns": [
@@ -35,7 +61,7 @@
             "column_initial_value": "",
             "column_value":[
                 {
-                    "operator": "+",
+                    "operator": "=",
                     "operand":  "[SUPPLIER_NAME]"
                 }
             ]
@@ -46,8 +72,19 @@
             "column_initial_value": 0,
             "column_value":[
                 {
-                    "operator": "+",
+                    "operator": "=",
                     "operand":  "<totalInspsPerSupplier>"
+                }
+            ]
+        },
+        {
+            "column_name": "total quantity",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalProdQty>"
                 }
             ]
         }
@@ -81,16 +118,76 @@
                     "operator": "+",
                     "operand": "[REPORT_NO]"
                 }
+            },
+            {
+                "variable_name": "totalProdQtyForSupplier",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "SUPPLIER_NAME",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "!==",
+                                        "operand": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": "[PROD_QUANTITY]"
+                }
             }
         ],
         "columns": [
             {
+                "column_name": "Supplier Name",
+                "column_data_type": "String",
+                "column_initial_value": "",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_NAME]"
+                    }
+                ]
+            },
+            {
                 "column_name": "# of reports",
                 "column_data_type": "Number",
+                "column_initial_value": 0,
                 "column_value": [
                     {
                         "operator": "+",
                         "operand":  "<totalInspsPerSupplierAndFactory>"
+                    }
+                ]
+            },
+            {
+                "column_name": "FACTORY CITY",
+                "column_data_type": "String",
+                "column_initial_value": 0,
+                "column_value": [
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_CITY]"
+                    }
+                ]
+            },
+            {
+                "column_name": "total quantity",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalProdQtyForSupplier>"
                     }
                 ]
             }

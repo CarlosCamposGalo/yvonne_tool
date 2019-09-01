@@ -12,12 +12,26 @@ export default (workbookData, destPath) => {
         const worksheetData = workbookData.worksheets[i]
         const worksheet = workbook.addWorksheet(worksheetData.worksheet_name)
         worksheet.columns=worksheetData.columns
-        console.log(worksheetData.columns)
         for(let j in worksheetData.rows){
-            console.log(worksheetData.rows[j])
-            worksheet.addRow(worksheetData.rows[j])
-        }
-            
+            worksheet.addRow(worksheetData.rows[j].row)
+            if(worksheetData.rows[j].sub_row_level == 0 ) {
+               const row = worksheet.lastRow
+               row.fill = {
+                    type: 'pattern',
+                    pattern: 'darkVertical',
+                    fgColor: {
+                        argb: 'FFFF0000'
+                    }
+                }
+               row.getCell(1).font = {
+                    name: 'Comic Sans MS',
+                    family: 4,
+                    underline: true,
+                    bold: true
+                  };
+            }
+
+         }
     }
     return workbook.xlsx.writeFile(destPath)
 }

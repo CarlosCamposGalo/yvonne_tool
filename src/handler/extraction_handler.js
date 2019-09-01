@@ -6,6 +6,17 @@ import filter from './filter_handler'
 import {CastFactory} from '../operation/datatype'
 import arithmetic from '../operation/arithmetic'
 
+
+const CREATE_UUID = () => {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
 class ExtractionUtil {
     addKeys(row, extract, keys) {
         let target = extract
@@ -18,7 +29,8 @@ class ExtractionUtil {
         }
     }
     populate(data, extract, populations){
-        if(extract["variables"] === undefined) extract["variables"] = {}
+        if(extract["variables"] === undefined) 
+            extract["variables"] = {row_data: data}
         const variables = extract.variables
         for(let i in populations) {
             const target = populations[i]
@@ -95,62 +107,61 @@ class ExtractionUtil {
     }
     consolidate(worksheetBluePrint, extractedWorksheet) {
         const consolidated_worksheet = {worksheet_name: worksheetBluePrint.worksheet_name, columns:[], rows:[]}
-        
-        const columnsBluePrint = worksheetBluePrint.table.columns
-        /**
-         *   {
-            "column_name": "# of reports",
-            "column_data_type": "Number",
-            "column_value":[
-                {
-                    "operator": "+",
-                    "operand":  "<totalInspsPerSupplier>"
-                }
-            ]
-        }
-         */
-        for(let i in columnsBluePrint) {
-            const columnBluePrint = columnsBluePrint[i]
-            //Inject the id generated to refence with the row
-            columnBluePrint.id = new Date().getTime()
-            const column = {
-                header: columnBluePrint.column_name,
-                key: `${columnBluePrint.id}`
-            }
-            consolidated_worksheet.columns.push(column)
-        }
+       
+        const generateActualRow = (columnsBluePrint, extractedRow, sub_row_level = 0) => {
+            for(let i in columnsBluePrint) {
+                const columnBluePrint = columnsBluePrint[i]
 
-        
-        for(let key in extractedWorksheet) {
-            if(extractedWorksheet.hasOwnProperty(key)){
-                const row = {}
-                const variables = JSON.parse(JSON.stringify(extractedWorksheet[key].variables))
-                const sub_row = JSON.parse(JSON.stringify(extractedWorksheet[key].sub_row))
-                delete extractedWorksheet[key].variables
-                delete extractedWorksheet[key].sub_row
-
-                for(let i in columnsBluePrint) {
-                    const columnBluePrint = columnsBluePrint[i]
-                    row[columnBluePrint.id] = columnBluePrint.column_initial_value
-                    //console.log(JSON.stringify(columnBluePrint))
-                    for(let j in columnBluePrint.column_value){
-                        let opr = columnBluePrint.column_value[j]
-                        //console.log(opr)
-                        const fn = arithmetic(opr.operator)
-                        const operand_value = this.getValue(opr.operand, variables, {"SUPPLIER_NAME": key})
-                        const castFn = CastFactory(columnBluePrint.column_data_type)
-                        //console.log("Operand ", operand_value, row[columnBluePrint.id])
-                        row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
+                //Check if the column already added
+                for(let j in consolidated_worksheet.columns){
+                    if(consolidated_worksheet.columns[j].header === columnBluePrint.column_name){
+                        columnBluePrint.id = consolidated_worksheet.columns[j].key
+                        break
                     }
                 }
-                consolidated_worksheet.rows.push(row)
+
+                if(columnBluePrint.id) continue
+
+                //Inject the id generated to refence with the row
+                columnBluePrint.id = CREATE_UUID()
+                const column = {
+                    header: columnBluePrint.column_name,
+                    key: `${columnBluePrint.id}`
+                }
+                consolidated_worksheet.columns.push(column)
+            }
+
+            
+            for(let key in extractedRow) {
+                if(extractedRow.hasOwnProperty(key)){
+                    const row = {}
+                    const variables = extractedRow[key].variables ? JSON.parse(JSON.stringify(extractedRow[key].variables)) : {}
+                    const sub_row = extractedRow[key].sub_row ? JSON.parse(JSON.stringify(extractedRow[key].sub_row)) : {}
+                    delete extractedRow[key].variables
+                    delete extractedRow[key].sub_row
+    
+                    for(let i in columnsBluePrint) {
+                        const columnBluePrint = columnsBluePrint[i]
+                        row[columnBluePrint.id] = columnBluePrint.column_initial_value
+                        //console.log(JSON.stringify(variables.row_data))
+                        for(let j in columnBluePrint.column_value){
+                            let opr = columnBluePrint.column_value[j]
+                            const fn = arithmetic(opr.operator)
+                            const operand_value = this.getValue(opr.operand, variables, variables.row_data)
+                            const castFn = CastFactory(columnBluePrint.column_data_type)
+                            //console.log("Operand ", operand_value, row[columnBluePrint.id])
+                            row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
+                        }
+                    }
+                    consolidated_worksheet.rows.push({row: row, sub_row_level: sub_row_level})
+                    if(sub_row) {
+                        generateActualRow(JSON.parse(JSON.stringify(worksheetBluePrint.table.sub_row.columns)), sub_row, sub_row_level  + 1)
+                    }
+                }
             }
         }
-
-        // console.log(consolidated_worksheet)
+        generateActualRow(JSON.parse(JSON.stringify(worksheetBluePrint.table.columns)), extractedWorksheet)
         return consolidated_worksheet
-        
-
     }
 }
 
@@ -177,15 +188,16 @@ export default (srcPath, workbook_schema)=>{
     const workbookBluePrint = workbookBluePrintUtil.build(workbook_schema)
     const extractedWorksheetPromises = []
     for(let i in workbookBluePrint.worksheets) {
-        const ps = extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]).then((extractWorksheet)=>{
-            return Promise.resolve(extractionUtil.consolidate(workbookBluePrint.worksheets[i], extractWorksheet))
+        const worksheetBluePrint = workbookBluePrint.worksheets[i]
+        const ps = extractionUtil.extract(srcPath, worksheetBluePrint).then((extractWorksheet)=>{
+            return Promise.resolve(extractionUtil.consolidate(worksheetBluePrint, extractWorksheet))
         })
         //console.log(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
         extractedWorksheetPromises.push(ps)
     }
 
     return Promise.all(extractedWorksheetPromises).then((extractedWorksheets)=>{
-       // console.log(extractedWorksheets)
+       //\ console.log(extractedWorksheets)
         return {
             "creator": workbook_schema.creator,
             "lastModifiedBy": workbook_schema.lastModifiedBy,
