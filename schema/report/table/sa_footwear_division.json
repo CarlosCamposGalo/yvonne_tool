@@ -187,6 +187,33 @@
                     "operator": "+",
                     "operand": 1
             }
+        },
+        {
+            "variable_name": "totalClientDecisionForRejected",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "CLIENT_DECISION",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "Rejected"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
         }
     ],
     "columns": [
@@ -279,6 +306,21 @@
                             "operand":  "<totalOverallResultsForN/A>"
                         }
                     ]
+               }
+            ]
+        },
+        {
+            "column_name": "Rejection Rate",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalClientDecisionForRejected>"
+                },
+                {
+                   "operator": "/",
+                   "operand": "<totalInspsPerSupplier>"      
                }
             ]
         }
@@ -474,6 +516,33 @@
                         "operator": "+",
                         "operand": 1
                 }
+            },
+            {
+                "variable_name": "totalClientDecisionForRejected",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "CLIENT_DECISION",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Rejected"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
             }
         ],
         "columns": [
@@ -566,17 +635,32 @@
                         "operand":  "<totalOverallResultsForFailed>"
                     },
                     {
+                        "operator": "/",
+                        "operand":  [
+                                {
+                                    "operator": "=",
+                                    "operand":  "<totalInspsPerSupplierAndFactory>"
+                                },
+                                {
+                                    "operator": "-",
+                                    "operand":  "<totalOverallResultsForN/A>"
+                                }
+                            ]
+                    }
+                ]
+            },
+            {
+                "column_name": "Rejection Rate",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalClientDecisionForRejected>"
+                    },
+                    {
                     "operator": "/",
-                    "operand":  [
-                            {
-                                "operator": "=",
-                                "operand":  "<totalInspsPerSupplierAndFactory>"
-                            },
-                            {
-                                "operator": "-",
-                                "operand":  "<totalOverallResultsForN/A>"
-                            }
-                        ]
+                    "operand": "<totalInspsPerSupplierAndFactory>"      
                 }
                 ]
             }
