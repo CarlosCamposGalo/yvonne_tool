@@ -14,21 +14,22 @@ export default (workbookData, destPath) => {
         worksheet.columns=worksheetData.columns
         for(let j in worksheetData.rows){
             worksheet.addRow(worksheetData.rows[j].row)
-            if(worksheetData.rows[j].sub_row_level == 0 ) {
-               const row = worksheet.lastRow
+            const row = worksheet.lastRow
+            if(worksheetData.rows[j].sub_row_level == 0){
+                row.getCell(1).font = {
+                    name: 'Comic Sans MS',
+                    family: 'Arial',
+                    size: 11,
+                    bold: true
+                  };
+            } else if(worksheetData.rows[j].sub_row_level == 1 ) {
                row.fill = {
                     type: 'pattern',
                     pattern: 'darkVertical',
-                    fgColor: {
-                        argb: 'FFFF0000'
+                    fsgColor: {
+                        argb: 'd3d3d3'
                     }
                 }
-               row.getCell(1).font = {
-                    name: 'Comic Sans MS',
-                    family: 4,
-                    underline: true,
-                    bold: true
-                  };
             }
 
          }

@@ -54,6 +54,20 @@ class ExtractionUtil {
             const identity = value.substring(1, value.length-1)
             return data[identity]
         }
+        else if(typeof value === "object" && Array.isArray(value) && value.length && value[0].operator) {
+            let result = 0
+            const compute = (opr) => {
+                console.log("Operand ...", result, opr)
+                const fn = arithmetic(opr.operator)
+                const operand_value = this.getValue(opr.operand, variables, data)
+                console.log(operand_value)
+                result = fn(result, operand_value)
+            }
+            for(let i in value){
+                compute(value[i])
+            }
+            return result
+        }
         /**Else return the value */
         return value
     }
@@ -143,14 +157,21 @@ class ExtractionUtil {
                     for(let i in columnsBluePrint) {
                         const columnBluePrint = columnsBluePrint[i]
                         row[columnBluePrint.id] = columnBluePrint.column_initial_value
-                        //console.log(JSON.stringify(variables.row_data))
+                        console.log(columnBluePrint.column_name)
                         for(let j in columnBluePrint.column_value){
-                            let opr = columnBluePrint.column_value[j]
-                            const fn = arithmetic(opr.operator)
-                            const operand_value = this.getValue(opr.operand, variables, variables.row_data)
-                            const castFn = CastFactory(columnBluePrint.column_data_type)
-                            //console.log("Operand ", operand_value, row[columnBluePrint.id])
-                            row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
+                            let operation = columnBluePrint.column_value[j]
+                            const compute = (opr) => {
+                                const fn = arithmetic(opr.operator)
+                                const operand_value = this.getValue(opr.operand, variables, variables.row_data)
+                                const castFn = CastFactory(columnBluePrint.column_data_type)
+                                console.log("Operand sa head", row[columnBluePrint.id],  opr.operand, operand_value)
+                                row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
+                            }
+
+                            if(typeof operation === "object") {
+                                //console.log(variables)
+                                compute(operation)
+                            }
                         }
                     }
                     consolidated_worksheet.rows.push({row: row, sub_row_level: sub_row_level})
@@ -160,6 +181,7 @@ class ExtractionUtil {
                 }
             }
         }
+
         generateActualRow(JSON.parse(JSON.stringify(worksheetBluePrint.table.columns)), extractedWorksheet)
         return consolidated_worksheet
     }
