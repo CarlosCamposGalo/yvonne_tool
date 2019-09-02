@@ -133,6 +133,60 @@
                     "operator": "+",
                     "operand": 1
             }
+        },
+        {
+            "variable_name": "totalOverallResultsForFailed",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "OVERALL_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "Failed"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalOverallResultsForN/A",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "OVERALL_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "N/A"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
         }
     ],
     "columns": [
@@ -199,6 +253,30 @@
                         {
                             "operator": "-",
                             "operand":  "<totalMeasurementResultForN/A>"
+                        }
+                    ]
+               }
+            ]
+        },
+        {
+            "column_name": "Failure Rate",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalOverallResultsForFailed>"
+                },
+                {
+                   "operator": "/",
+                   "operand":  [
+                        {
+                            "operator": "=",
+                            "operand":  "<totalInspsPerSupplier>"
+                        },
+                        {
+                            "operator": "-",
+                            "operand":  "<totalOverallResultsForN/A>"
                         }
                     ]
                }
@@ -288,6 +366,114 @@
                         "operator": "+",
                         "operand": "[PROD_QUANTITY]"
                 }
+            },
+            {
+                "variable_name": "totalMeasurementResultForBeyondAQL",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "WORKMANSHIP_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Beyond AQL"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalMeasurementResultForN/A",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "WORKMANSHIP_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "N/A"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalOverallResultsForFailed",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "OVERALL_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Failed"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalOverallResultsForN/A",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "OVERALL_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "N/A"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
             }
         ],
         "columns": [
@@ -344,6 +530,54 @@
                         "operator": "=",
                         "operand":  "<totalProdQtyForSupplier>"
                     }
+                ]
+            },
+            {
+                "column_name": "Beyond AQL Rate %",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalMeasurementResultForBeyondAQL>"
+                    },
+                    {
+                    "operator": "/",
+                    "operand":  [
+                            {
+                                "operator": "=",
+                                "operand":  "<totalInspsPerSupplierAndFactory>"
+                            },
+                            {
+                                "operator": "-",
+                                "operand":  "<totalMeasurementResultForN/A>"
+                            }
+                        ]
+                }
+                ]
+            },
+            {
+                "column_name": "Failure Rate",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalOverallResultsForFailed>"
+                    },
+                    {
+                    "operator": "/",
+                    "operand":  [
+                            {
+                                "operator": "=",
+                                "operand":  "<totalInspsPerSupplierAndFactory>"
+                            },
+                            {
+                                "operator": "-",
+                                "operand":  "<totalOverallResultsForN/A>"
+                            }
+                        ]
+                }
                 ]
             }
         ]
