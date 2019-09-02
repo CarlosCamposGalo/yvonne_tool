@@ -203,6 +203,17 @@
                     ]
                }
             ]
+        },
+        {
+            "column_name": "country/region",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "[FACTORY_COUNTRY]"
+                }
+            ]
         }
     ],
     "sub_row": 
@@ -343,6 +354,17 @@
                     {
                         "operator": "=",
                         "operand":  "<totalProdQtyForSupplier>"
+                    }
+                ]
+            },
+            {
+                "column_name": "country/region",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_COUNTRY]"
                     }
                 ]
             }
