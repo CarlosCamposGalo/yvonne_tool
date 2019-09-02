@@ -94,7 +94,7 @@
                             "compares": [
                                 {
                                     "operator": "===",
-                                    "operand": "Within AQL"
+                                    "operand": "Beyond AQL"
                                 }
                             ]
                         }
@@ -104,7 +104,7 @@
             ],
             "computation": {
                     "operator": "+",
-                    "operand": 1
+                    "operand": "[REPORT_NO]"
             }
         },
         {
@@ -191,8 +191,16 @@
                 },
                 {
                    "operator": "/",
-                   "operand":   "<totalInspsPerSupplier>"
-                       
+                   "operand":  [
+                        {
+                            "operator": "=",
+                            "operand":  "<totalInspsPerSupplier>"
+                        },
+                        {
+                            "operator": "-",
+                            "operand":  "<totalMeasurementResultForN/A>"
+                        }
+                    ]
                }
             ]
         }

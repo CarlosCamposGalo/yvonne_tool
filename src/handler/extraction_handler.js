@@ -3,6 +3,7 @@ import csv_parser from 'csv-parser'
 import fs from 'fs'
 import stripBomStream from 'strip-bom-stream'
 import filter from './filter_handler'
+import sorter from './sort_handler'
 import {CastFactory} from '../operation/datatype'
 import arithmetic from '../operation/arithmetic'
 
@@ -115,7 +116,15 @@ class ExtractionUtil {
             .on('data', HANDLE(extractedData))
             .on('end', () => {
                 console.log(`${srcPath}: EXTRACTION COMPLETE for worksheet ${worksheetBluePrint.worksheet_name} ******************************************* `)
-                resolve(extractedData)
+                const sortedExtractedData = sorter.sortObjectByFieldValue(extractedData, (key1, key2)=>{
+                    return  extractedData[key2].variables.totalInspsPerSupplier - extractedData[key1].variables.totalInspsPerSupplier
+                })
+                for(let key in sortedExtractedData){
+                    sortedExtractedData[key].sub_row = sorter.sortObjectByFieldValue(sortedExtractedData[key].sub_row, (sub_key1, sub_key2)=>{
+                        return  sortedExtractedData[key].sub_row[sub_key2].variables.totalInspsPerSupplierAndFactory - sortedExtractedData[key].sub_row[sub_key1].variables.totalInspsPerSupplierAndFactory
+                    })
+                }
+                resolve(sortedExtractedData)
             });
         })
     }
@@ -212,6 +221,7 @@ export default (srcPath, workbook_schema)=>{
     for(let i in workbookBluePrint.worksheets) {
         const worksheetBluePrint = workbookBluePrint.worksheets[i]
         const ps = extractionUtil.extract(srcPath, worksheetBluePrint).then((extractWorksheet)=>{
+
             return Promise.resolve(extractionUtil.consolidate(worksheetBluePrint, extractWorksheet))
         })
         //console.log(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
