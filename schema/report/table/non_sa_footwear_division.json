@@ -104,7 +104,7 @@
             ],
             "computation": {
                     "operator": "+",
-                    "operand": "[REPORT_NO]"
+                    "operand": 1
             }
         },
         {

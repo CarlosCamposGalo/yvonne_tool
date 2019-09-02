@@ -1,5 +1,5 @@
 {
-    "worksheet_name": "non-sa",
+    "worksheet_name": "Footwear (sa)",
     "filters": [
         {
             "column_name": "COMPANY_NAME",
@@ -9,7 +9,7 @@
                     "conditional": null,
                     "compares": [
                         {
-                            "operator": "!contains",
+                            "operator": "contains",
                             "operand": "south africa"
                         }
                     ]
