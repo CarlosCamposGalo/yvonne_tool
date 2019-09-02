@@ -251,7 +251,7 @@
             ]
         },
         {
-            "column_name": "total quantity",
+            "column_name": "Total Quantity",
             "column_data_type": "Number",
             "column_initial_value": 0,
             "column_value":[
@@ -262,7 +262,7 @@
             ]
         },
         {
-            "column_name": "Beyond AQL Rate %",
+            "column_name": "PO Beyond AQL Rate %",
             "column_data_type": "Number",
             "column_initial_value": 0,
             "column_value":[
@@ -286,7 +286,7 @@
             ]
         },
         {
-            "column_name": "Failure Rate",
+            "column_name": "PO Inspection Failure Rate",
             "column_data_type": "Number",
             "column_initial_value": 0,
             "column_value":[
@@ -310,7 +310,7 @@
             ]
         },
         {
-            "column_name": "Rejection Rate",
+            "column_name": "PO Report Rejection Rate %",
             "column_data_type": "Number",
             "column_initial_value": 0,
             "column_value":[
@@ -580,18 +580,7 @@
                 ]
             },
             {
-                "column_name": "FACTORY CITY",
-                "column_data_type": "String",
-                "column_initial_value": 0,
-                "column_value": [
-                    {
-                        "operator": "=",
-                        "operand":  "[FACTORY_CITY]"
-                    }
-                ]
-            },
-            {
-                "column_name": "total quantity",
+                "column_name": "Total Quantity",
                 "column_data_type": "Number",
                 "column_initial_value": 0,
                 "column_value":[
@@ -602,7 +591,7 @@
                 ]
             },
             {
-                "column_name": "Beyond AQL Rate %",
+                "column_name": "PO Beyond AQL Rate %",
                 "column_data_type": "Number",
                 "column_initial_value": 0,
                 "column_value":[
@@ -626,7 +615,7 @@
                 ]
             },
             {
-                "column_name": "Failure Rate",
+                "column_name": "PO Inspection Failure Rate",
                 "column_data_type": "Number",
                 "column_initial_value": 0,
                 "column_value":[
@@ -650,7 +639,7 @@
                 ]
             },
             {
-                "column_name": "Rejection Rate",
+                "column_name": "PO Report Rejection Rate %",
                 "column_data_type": "Number",
                 "column_initial_value": 0,
                 "column_value":[
@@ -662,6 +651,38 @@
                     "operator": "/",
                     "operand": "<totalInspsPerSupplierAndFactory>"      
                 }
+                ]
+            },
+            {
+                "column_name": "Factory City",
+                "column_data_type": "String",
+                "column_initial_value": 0,
+                "column_value": [
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_CITY]"
+                    }
+                ]
+            },
+            {
+                "column_name": "Country/Region",
+                "column_data_type": "string",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_COUNTRY]"
+                    }
+                ]
+            },
+            {
+                "column_name": "Site Classification",
+                "column_data_type": "string",
+                "column_initial_value": "",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[SITE_CLASSIFICATION]"
+                    }
                 ]
             }
         ]
