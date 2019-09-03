@@ -17,7 +17,7 @@ class CsvWriter {
             this.state = "busy"
             this.chunk = this.records
             this.records = []
-            console.log("Writing to file...")
+            console.log("Writing rows to csv file...")
             if(this.chunk.length)
                 return this.writer.writeRecords(this.chunk).then(()=>{
                     this.state = "ready"
@@ -62,7 +62,6 @@ class CsvWritersHandler {
 
     get(key) {
         const instance = this.instances.find((el)=>{
-            console.log("Key is : ", el.key.toLowerCase() )
             return el.key.toLowerCase() === key.toLowerCase()
         })
         return instance  ? instance.writer : {finalize: ()=>{console.log("There are no writer built fot the path ", key)}}

@@ -1,0 +1,20 @@
+{
+    "worksheet_name": "KPI Per Factory",
+    "filters": [
+        {
+            "column_name": "COMPANY_NAME",
+            "column_data_type": "string",
+            "conditions": [
+                {
+                    "conditional": null,
+                    "compares": [
+                        {
+                            "operator": "!==",
+                            "operand": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

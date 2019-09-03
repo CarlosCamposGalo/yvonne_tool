@@ -97,9 +97,8 @@ class ExtractionUtil {
                 return (data) => {
                     ++row_number
                     if(filter(worksheetBluePrint.filters)(data)) {
-                        data["row_no_from_src"] = row_number
                         const table = worksheetBluePrint.table
-                        console.log(`Source file: ${srcPath};Belongs to worksheet "${worksheetBluePrint.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
+                        //console.log(`Source file: ${srcPath};Belongs to worksheet "${worksheetBluePrint.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
                         this.addKeys(data, object, [table.primary_key])
                         this.populate(data, object[data[table.primary_key]], table.populations)
                         this.addKeys({"sub_row": "sub_row"},  object[data[table.primary_key]], ["sub_row"])

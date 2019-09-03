@@ -1,0 +1,62 @@
+{
+  "creator": "Czeska Yvonne Naputo",
+  "lastModifiedBy": "Czeska Yvonne Naputo",
+  "input": {
+    "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
+    "dir": "\/home\/carlos\/Downloads"
+  },
+  "output": {
+    "filename": "KPI Per Factory - MRP Group Accessories - July -  2019",
+    "dir": "\/tmp"
+  },
+  "filters": [
+    {
+      "column_name": "ACTUAL_INSP_DATE",
+      "column_data_type": "date",
+      "conditions": [
+        {
+          "conditional": null,
+          "compares": [
+            {
+              "conditional": null,
+              "operator": ">",
+              "operand": "2019-06-30 00:00:00"
+            },
+            {
+              "conditional": "&&",
+              "operator": "<",
+              "operand": "2019-08-01 00:00:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "column_name": "COMPANY_NAME",
+      "column_data_type": "String",
+      "conditions": [
+        {
+          "conditional": "&&",
+          "compares": [
+            {
+              "conditional": "||",
+              "operator": "startswith",
+              "operand": "Mr Price"
+            },
+            {
+              "conditional": "&&",
+              "operator": "contains",
+              "operand": "Accessories"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "worksheets": [
+    {
+        "worksheet_path": "./../../schema/report/worksheet/accessories_sheet.json",
+        "table_path": "./../../schema/report/table/accessories_division.json"
+    }
+  ]
+}
