@@ -1,4 +1,6 @@
 {
+  "creator": "Czeska Yvonne Naputo",
+  "lastModifiedBy": "Czeska Yvonne Naputo",
   "input": {
     "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
     "dir": "\/home\/carlos\/Downloads"
@@ -49,6 +51,16 @@
           ]
         }
       ]
+    }
+  ],
+  "worksheets": [
+    {
+        "worksheet_path": "./../../schema/report/worksheet/non_sa_footwear_sheet.json",
+        "table_path": "./../../schema/report/table/non_sa_footwear_division.json"
+    },
+    {
+        "worksheet_path": "./../../schema/report/worksheet/sa_footwear_sheet.json",
+        "table_path": "./../../schema/report/table/sa_footwear_division.json"
     }
   ]
 }

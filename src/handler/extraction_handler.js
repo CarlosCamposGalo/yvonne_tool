@@ -58,10 +58,8 @@ class ExtractionUtil {
         else if(typeof value === "object" && Array.isArray(value) && value.length && value[0].operator) {
             let result = 0
             const compute = (opr) => {
-                console.log("Operand ...", result, opr)
                 const fn = arithmetic(opr.operator)
                 const operand_value = this.getValue(opr.operand, variables, data)
-                console.log(operand_value)
                 result = fn(result, operand_value)
             }
             for(let i in value){
@@ -99,6 +97,7 @@ class ExtractionUtil {
                 return (data) => {
                     ++row_number
                     if(filter(worksheetBluePrint.filters)(data)) {
+                        data["row_no_from_src"] = row_number
                         const table = worksheetBluePrint.table
                         console.log(`Source file: ${srcPath};Belongs to worksheet "${worksheetBluePrint.worksheet_name}";POPULATE ROW ` + row_number, table.primary_key + ": " + data[table.primary_key], table.sub_row.primary_key + ": " + data[table.sub_row.primary_key])
                         this.addKeys(data, object, [table.primary_key])
@@ -166,19 +165,16 @@ class ExtractionUtil {
                     for(let i in columnsBluePrint) {
                         const columnBluePrint = columnsBluePrint[i]
                         row[columnBluePrint.id] = columnBluePrint.column_initial_value
-                        console.log(columnBluePrint.column_name)
                         for(let j in columnBluePrint.column_value){
                             let operation = columnBluePrint.column_value[j]
                             const compute = (opr) => {
                                 const fn = arithmetic(opr.operator)
                                 const operand_value = this.getValue(opr.operand, variables, variables.row_data)
                                 const castFn = CastFactory(columnBluePrint.column_data_type)
-                                console.log("Operand sa head", row[columnBluePrint.id],  opr.operand, operand_value)
                                 row[columnBluePrint.id] = fn(castFn(row[columnBluePrint.id]), castFn(operand_value))
                             }
 
                             if(typeof operation === "object") {
-                                //console.log(variables)
                                 compute(operation)
                             }
                         }
@@ -224,12 +220,10 @@ export default (srcPath, workbook_schema)=>{
 
             return Promise.resolve(extractionUtil.consolidate(worksheetBluePrint, extractWorksheet))
         })
-        //console.log(extractionUtil.extract(srcPath, workbookBluePrint.worksheets[i]))
         extractedWorksheetPromises.push(ps)
     }
 
     return Promise.all(extractedWorksheetPromises).then((extractedWorksheets)=>{
-       //\ console.log(extractedWorksheets)
         return {
             "creator": workbook_schema.creator,
             "lastModifiedBy": workbook_schema.lastModifiedBy,

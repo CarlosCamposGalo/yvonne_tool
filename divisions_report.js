@@ -8,21 +8,23 @@ import extraction from './src/handler/extraction_handler'
 import report from './src/handler/report_handler'
 import csvWriterInstances from './src/util/csvWriters'
 
-import workbook_schema from  './schema/report/workbook.json'
 
 
 const LOAD_DIVISIONS = () => {
     const divisions = []
-    glob.sync( './schema/filters/divisions/**/*.json' ).forEach(( file ) => { 
+    glob.sync( './schema/report/workbook/**/*.json' ).forEach(( file ) => { 
         const division = require(path.resolve( file ))
         divisions.push(division)
     })
     return divisions
 }
 
+let row_number = 1
 const HANDLE = (extractionconf) => {
     return (data) => {
+        ++row_number
         if(filter(extractionconf.filters)(data)) {
+            data["src_row_no"] = row_number
             const path = `${extractionconf.output.dir}/${extractionconf.output.filename}`
             const writer = csvWriterInstances.build(path, Object.keys(data).map((key)=>{return {id: key, title: key}}))
             writer.writeRecords(data)
@@ -53,7 +55,7 @@ const MAIN = () => {
             csvWriterInstances.get(destPath)
                 .finalize(()=>{
                     console.log(`CSV written to path ${destPath}`)
-                    extraction(destPath, workbook_schema).then((consolidatedExtractedWorkbook)=>{
+                    extraction(destPath, divisions[i]).then((consolidatedExtractedWorkbook)=>{
                         report(consolidatedExtractedWorkbook, "/tmp/output.xls").then(()=>{
                             console.log("Done write of log")
                         })
