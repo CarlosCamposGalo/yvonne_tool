@@ -18,9 +18,27 @@ const fn = (operator) => {
         case "endswith":
              return (param1, param2) => param1.endsWith(param2);
         case "contains":
-            return (param1, param2) => param1.toLowerCase().indexOf(param2.toLowerCase()) !== -1
+            return (param1, param2) => {
+                if(typeof param2 === "string") {
+                    return param1.toLowerCase().indexOf(param2.toLowerCase()) !== -1
+                } else {
+                    for(let stringCmp in param2) {
+                        if(param1.toLowerCase().indexOf(param2[stringCmp].toLowerCase()) !== -1) return true
+                    }
+                    return false
+                }
+            }
         case "!contains":
-                return (param1, param2) => param1.toLowerCase().indexOf(param2.toLowerCase()) === -1
+            return (param1, param2) => {
+                if(typeof param2 === "string") {
+                    return param1.toLowerCase().indexOf(param2.toLowerCase()) === -1
+                } else {
+                    for(let stringCmp in param2) {
+                        if(param1.toLowerCase().indexOf(param2[stringCmp].toLowerCase()) !== -1) return false
+                    }
+                    return true
+                }
+            }
         default:
             return (param1, param2) => false;
     }
@@ -38,7 +56,7 @@ const date_comparator = (operator) => {
 const string_comparator = (operator) => {
     return (param1, param2) => {
         const param1Time = param1 ? param1.toLowerCase() : param1
-        const param2Time = param2 ? param2.toLowerCase() : param2
+        const param2Time = typeof param2 === "string" ? param2.toLowerCase() : param2
         return fn(operator)(param1Time, param2Time)
     }
     

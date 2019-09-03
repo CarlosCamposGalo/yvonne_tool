@@ -62,14 +62,15 @@ class CsvWritersHandler {
 
     get(key) {
         const instance = this.instances.find((el)=>{
+            console.log("Key is : ", el.key.toLowerCase() )
             return el.key.toLowerCase() === key.toLowerCase()
         })
-        return instance  ? instance.writer : null
+        return instance  ? instance.writer : {finalize: ()=>{console.log("There are no writer built fot the path ", key)}}
     }
 
     build(path, headers) {
         const instance_writer = this.get(path)
-        if(!instance_writer) {
+        if(!instance_writer.writeRecords) {
             const writer = new CsvWriter(createObjectCsvWriter({
                 path: path,
                 header: headers

@@ -19,49 +19,69 @@ const LOAD_DIVISIONS = () => {
     return divisions
 }
 
-let row_number = 1
-const HANDLE = (extractionconf) => {
-    return (data) => {
-        ++row_number
-        if(filter(extractionconf.filters)(data)) {
-            data["src_row_no"] = row_number
-            const path = `${extractionconf.output.dir}/${extractionconf.output.filename}`
-            const writer = csvWriterInstances.build(path, Object.keys(data).map((key)=>{return {id: key, title: key}}))
-            writer.writeRecords(data)
-        }
+
+class DIVISION_EXTRACTION  {
+    constructor(extractionconf){
+        this.extractionconf = extractionconf
+        this.destPath = `${extractionconf.output.dir}/${extractionconf.output.filename}.csv`
+        
     }
+
+    execute() {
+        const extractionconf = this.extractionconf
+        let row_number = 1
+
+        const HANDLE = (extractionconf) => {
+            return (data) => {
+                ++row_number
+                if(filter(extractionconf.filters)(data)) {
+                    data["src_row_no"] = row_number
+                    const writer = csvWriterInstances.build(this.destPath, Object.keys(data).map((key)=>{return {id: key, title: key}}))
+                    writer.writeRecords(data)
+                }
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            const srcPath = `${extractionconf.input.dir}/${extractionconf.input.filename}`
+            const destPath = this.destPath
+
+            console.log("SRC file:", srcPath)
+            console.log("DEST file:", destPath)
+    
+            if(fs.existsSync(destPath)) {
+                fs.unlinkSync(destPath)
+                console.log(`Deleted destination path: ${destPath}`)
+            }
+        
+            fs.createReadStream(srcPath)
+            .pipe(stripBomStream())
+            .pipe(csv_parser())
+            .on('data', HANDLE(extractionconf))
+            .on('end', () => {
+                console.log(`Write filtered data to ${destPath}`)
+                csvWriterInstances.get(destPath)
+                    .finalize(()=>{
+                        console.log(`CSV written to path ${destPath}`)
+                        extraction(destPath, extractionconf).then((consolidatedExtractedWorkbook)=>{
+                            report(consolidatedExtractedWorkbook, `${extractionconf.output.dir}/${extractionconf.output.filename}.xlsx`).then(()=>{
+                                console.log("Done write of log")
+                                resolve(Promise.resolve())
+                            })
+                        })
+                    })   
+            });
+        })
+    }
+
 }
 
 const MAIN = () => {
     const divisions = LOAD_DIVISIONS()
+    let actionPromise = Promise.resolve()
     for(const i in divisions) {
         const extractionconf = divisions[i]
-        const destPath = `${extractionconf.output.dir}/${extractionconf.output.filename}`
-        const srcPath = `${extractionconf.input.dir}/${extractionconf.input.filename}`
-
-        console.log("SRC file:", srcPath)
-        console.log("DEST file:", destPath)
-
-        if(fs.existsSync(destPath)) {
-            fs.unlinkSync(destPath)
-            console.log(`Deleted destination path: ${destPath}`)
-        }
-    
-        fs.createReadStream(srcPath)
-        .pipe(stripBomStream())
-        .pipe(csv_parser())
-        .on('data', HANDLE(extractionconf))
-        .on('end', () => 
-            csvWriterInstances.get(destPath)
-                .finalize(()=>{
-                    console.log(`CSV written to path ${destPath}`)
-                    extraction(destPath, divisions[i]).then((consolidatedExtractedWorkbook)=>{
-                        report(consolidatedExtractedWorkbook, "/tmp/output.xls").then(()=>{
-                            console.log("Done write of log")
-                        })
-                    })
-                })
-        );
+        actionPromise = actionPromise.then(new DIVISION_EXTRACTION(divisions[i]).execute())
     }
 }
 
