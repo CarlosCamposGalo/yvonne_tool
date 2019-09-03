@@ -1,0 +1,690 @@
+{
+    "primary_key": "SUPPLIER_NAME",
+    "populations": [
+        {
+            "variable_name": "totalInspsPerSupplier",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "SUPPLIER_NAME",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalProdQty",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "SUPPLIER_NAME",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": "[PROD_QUANTITY]"
+            }
+        },
+        {
+            "variable_name": "totalNoOfPO",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "SUPPLIER_NAME",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": "[NB_OF_PO]"
+            }
+        },
+        {
+            "variable_name": "totalMeasurementResultForBeyondAQL",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "WORKMANSHIP_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "Beyond AQL"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalMeasurementResultForN/A",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "WORKMANSHIP_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "N/A"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalOverallResultsForFailed",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "OVERALL_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "Failed"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalOverallResultsForN/A",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "OVERALL_RESULTS",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "N/A"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalClientDecisionForRejected",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "CLIENT_DECISION",
+                    "column_data_type": "string",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": "Rejected"
+                                }
+                            ]
+                        }
+                    ]
+                }
+                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        }
+    ],
+    "columns": [
+        {
+            "column_name": "Supplier Name",
+            "column_data_type": "String",
+            "column_initial_value": "",
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "[SUPPLIER_NAME]"
+                }
+            ]
+        },
+        {
+            "column_name": "# of reports",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalInspsPerSupplier>"
+                }
+            ]
+        },
+        {
+            "column_name": "# of POS",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalNoOfPO>"
+                }
+            ]
+        },
+        {
+            "column_name": "Total Quantity",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalProdQty>"
+                }
+            ]
+        },
+        {
+            "column_name": "Beyond AQL Rate %",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalMeasurementResultForBeyondAQL>"
+                },
+                {
+                   "operator": "/",
+                   "operand":  [
+                        {
+                            "operator": "=",
+                            "operand":  "<totalInspsPerSupplier>"
+                        },
+                        {
+                            "operator": "-",
+                            "operand":  "<totalMeasurementResultForN/A>"
+                        }
+                    ]
+               }
+            ]
+        },
+        {
+            "column_name": "Failure Rate",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalOverallResultsForFailed>"
+                },
+                {
+                   "operator": "/",
+                   "operand":  [
+                        {
+                            "operator": "=",
+                            "operand":  "<totalInspsPerSupplier>"
+                        },
+                        {
+                            "operator": "-",
+                            "operand":  "<totalOverallResultsForN/A>"
+                        }
+                    ]
+               }
+            ]
+        },
+        {
+            "column_name": "Rejection Rate %",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalClientDecisionForRejected>"
+                },
+                {
+                   "operator": "/",
+                   "operand": "<totalInspsPerSupplier>"      
+               }
+            ]
+        }
+    ],
+    "sub_row": 
+    {
+        "primary_key": "FACTORY_NAME",
+        "populations": [
+            {
+                "variable_name": "totalInspsPerSupplierAndFactory",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "FACTORY_NAME",
+                        "column_data_type": "String",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "!==",
+                                        "operand": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "computation": {
+                    "operator": "+",
+                    "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalNoOfPOSPerSupplierAndFactory",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "FACTORY_NAME",
+                        "column_data_type": "String",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "!==",
+                                        "operand": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "computation": {
+                    "operator": "+",
+                    "operand": "[NB_OF_PO]"
+                }
+                
+            },
+            {
+                "variable_name": "totalProdQtyForSupplier",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "SUPPLIER_NAME",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "!==",
+                                        "operand": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": "[PROD_QUANTITY]"
+                }
+            },
+            {
+                "variable_name": "totalMeasurementResultForBeyondAQL",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "WORKMANSHIP_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Beyond AQL"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalMeasurementResultForN/A",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "WORKMANSHIP_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "N/A"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalOverallResultsForFailed",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "OVERALL_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Failed"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalOverallResultsForN/A",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "OVERALL_RESULTS",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "N/A"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            },
+            {
+                "variable_name": "totalClientDecisionForRejected",
+                "variable_data_type": "Number",
+                "variable_initial_value": 0,
+                "filters": [
+                    {
+                        "column_name": "CLIENT_DECISION",
+                        "column_data_type": "string",
+                        "conditions": [
+                            {
+                                "conditional": null,
+                                "compares": [
+                                    {
+                                        "operator": "===",
+                                        "operand": "Rejected"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ],
+                "computation": {
+                        "operator": "+",
+                        "operand": 1
+                }
+            }
+        ],
+        "columns": [
+            {
+                "column_name": "Supplier Name",
+                "column_data_type": "String",
+                "column_initial_value": "",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_NAME]"
+                    }
+                ]
+            },
+            {
+                "column_name": "# of reports",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value": [
+                    {
+                        "operator": "+",
+                        "operand":  "<totalInspsPerSupplierAndFactory>"
+                    }
+                ]
+            },
+            {
+                "column_name": "# of POS",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalNoOfPOSPerSupplierAndFactory>"
+                    }
+                ]
+            },
+            {
+                "column_name": "Total Quantity",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalProdQtyForSupplier>"
+                    }
+                ]
+            },
+            {
+                "column_name": "Beyond AQL Rate %",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalMeasurementResultForBeyondAQL>"
+                    },
+                    {
+                    "operator": "/",
+                    "operand":  [
+                            {
+                                "operator": "=",
+                                "operand":  "<totalInspsPerSupplierAndFactory>"
+                            },
+                            {
+                                "operator": "-",
+                                "operand":  "<totalMeasurementResultForN/A>"
+                            }
+                        ]
+                }
+                ]
+            },
+            {
+                "column_name": "Failure Rate",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalOverallResultsForFailed>"
+                    },
+                    {
+                        "operator": "/",
+                        "operand":  [
+                                {
+                                    "operator": "=",
+                                    "operand":  "<totalInspsPerSupplierAndFactory>"
+                                },
+                                {
+                                    "operator": "-",
+                                    "operand":  "<totalOverallResultsForN/A>"
+                                }
+                            ]
+                    }
+                ]
+            },
+            {
+                "column_name": "Rejection Rate %",
+                "column_data_type": "Number",
+                "column_initial_value": 0,
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "<totalClientDecisionForRejected>"
+                    },
+                    {
+                    "operator": "/",
+                    "operand": "<totalInspsPerSupplierAndFactory>"      
+                }
+                ]
+            },
+            {
+                "column_name": "Factory City",
+                "column_data_type": "String",
+                "column_initial_value": 0,
+                "column_value": [
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_CITY]"
+                    }
+                ]
+            },
+            {
+                "column_name": "Country/Region",
+                "column_data_type": "string",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[FACTORY_COUNTRY]"
+                    }
+                ]
+            },
+            {
+                "column_name": "Site Classification",
+                "column_data_type": "string",
+                "column_initial_value": "",
+                "column_value":[
+                    {
+                        "operator": "=",
+                        "operand":  "[SITE_CLASSIFICATION]"
+                    }
+                ]
+            }
+        ]
+    }
+}
