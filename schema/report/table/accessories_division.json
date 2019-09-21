@@ -108,6 +108,62 @@
             }
         },
         {
+            "variable_name": "totalMeasurementResultForBeyondAQLMAJMAX25MINMAX40",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "MAJOR_FOUND",
+                    "column_data_type": "number",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": ">",
+                                    "operand": "[MAJOR_MAX_2.5]"
+                                }
+                            ]
+                        }
+                    ]
+                }, 
+                {
+                    "column_name": "MINOR_FOUND",
+                    "column_data_type": "number",
+                    "conditions": [
+                        {
+                            "conditional": "||",
+                            "compares": [
+                                {
+                                    "operator": ">",
+                                    "operand" : "[MINOR_MAX_4.0]"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "column_name": "MAJOR_MAX_2.5",
+                    "column_data_type": "number",
+                    "conditions": [
+                        {
+                            "conditional": "&&",
+                            "compares": [
+                                {
+                                    "operator": "!==",
+                                    "operand": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
             "variable_name": "totalMeasurementResultForN/A",
             "variable_data_type": "Number",
             "variable_initial_value": 0,
@@ -127,7 +183,32 @@
                         }
                     ]
                 }
-                
+            ],
+            "computation": {
+                    "operator": "+",
+                    "operand": 1
+            }
+        },
+        {
+            "variable_name": "totalMeasurementResultForN/AMAJMAX25MINMAX40",
+            "variable_data_type": "Number",
+            "variable_initial_value": 0,
+            "filters": [
+                {
+                    "column_name": "MAJOR_MAX_2.5",
+                    "column_data_type": "number",
+                    "conditions": [
+                        {
+                            "conditional": null,
+                            "compares": [
+                                {
+                                    "operator": "===",
+                                    "operand": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
             ],
             "computation": {
                     "operator": "+",
@@ -262,7 +343,7 @@
             ]
         },
         {
-            "column_name": "PO Beyond AQL Rate %",
+            "column_name": "Beyond AQL Rate % \n\t(4.0/6.5)",
             "column_data_type": "Number",
             "column_initial_value": 0,
             "column_value":[
@@ -280,6 +361,30 @@
                         {
                             "operator": "-",
                             "operand":  "<totalMeasurementResultForN/A>"
+                        }
+                    ]
+               }
+            ]
+        },
+        {
+            "column_name": "Beyond AQL Rate % \n\t(2.5/4.0)",
+            "column_data_type": "Number",
+            "column_initial_value": 0,
+            "column_value":[
+                {
+                    "operator": "=",
+                    "operand":  "<totalMeasurementResultForBeyondAQLMAJMAX25MINMAX40>"
+                },
+                {
+                   "operator": "/",
+                   "operand":  [
+                        {
+                            "operator": "=",
+                            "operand":  "<totalInspsPerSupplier>"
+                        },
+                        {
+                            "operator": "-",
+                            "operand":  "<totalMeasurementResultForN/AMAJMAX25MINMAX40>"
                         }
                     ]
                }
@@ -591,7 +696,7 @@
                 ]
             },
             {
-                "column_name": "PO Beyond AQL Rate %",
+                "column_name": "Beyond AQL Rate % \n\t(4.0/6.5)",
                 "column_data_type": "Number",
                 "column_initial_value": 0,
                 "column_value":[

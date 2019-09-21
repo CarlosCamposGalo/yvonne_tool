@@ -3,11 +3,11 @@
   "lastModifiedBy": "Czeska Yvonne Naputo",
   "input": {
     "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
-    "dir": "\/home\/carlos\/Downloads"
+    "dir": "C:/Users/Czeska Yvonne/Documents/automation/yvonne_tool"
   },
   "output": {
-    "filename": "KPI Per Factory - MRP Group Accessories - July -  2019",
-    "dir": "\/tmp"
+    "filename": "KPI Per Factory - MRP Group Accessories - August-  2019",
+    "dir": "C:/Users/Czeska Yvonne/Documents/automation/yvonne_tool"
   },
   "filters": [
     {
@@ -39,7 +39,7 @@
           "conditional": "&&",
           "compares": [
             {
-              "conditional": "||",
+              "conditional": null,
               "operator": "startswith",
               "operand": "Mr Price"
             },

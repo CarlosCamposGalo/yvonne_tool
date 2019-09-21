@@ -64,7 +64,7 @@ class DIVISION_EXTRACTION  {
                     .finalize(()=>{
                         console.log(`CSV written to path ${destPath}`)
                         extraction(destPath, extractionconf).then((consolidatedExtractedWorkbook)=>{
-                            report(consolidatedExtractedWorkbook, `${extractionconf.output.dir}/${extractionconf.output.filename}.xlsx`).then(()=>{
+                            report(consolidatedExtractedWorkbook, `${extractionconf.output.dir}/${extractionconf.output.filename}.xls`).then(()=>{
                                 console.log("Done write of log")
                                 resolve(Promise.resolve())
                             })

@@ -3,11 +3,11 @@
   "lastModifiedBy": "Czeska Yvonne Naputo",
   "input": {
     "filename": "MRP_COMPLETED_ORDERS_EXPORT.csv",
-    "dir": "\/home\/carlos\/Downloads"
+    "dir": "C:/Users/Czeska Yvonne/Documents/automation/yvonne_tool"
   },
   "output": {
     "filename": "KPI Per Factory - MRP Group Footwear - July - 2019",
-    "dir": "\/tmp"
+    "dir": "C:/Users/Czeska Yvonne/Documents/automation/yvonne_tool"
   },
   "filters": [
     {
@@ -20,12 +20,12 @@
             {
               "conditional": null,
               "operator": ">",
-              "operand": "2019-06-30 00:00:00"
+              "operand": "2019-07-31 00:00:00"
             },
             {
               "conditional": "&&",
               "operator": "<",
-              "operand": "2019-08-01 00:00:00"
+              "operand": "2019-09-01 00:00:00"
             }
           ]
         }

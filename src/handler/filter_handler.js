@@ -2,7 +2,16 @@ import ComparatorFactory from '../operation/comparator'
 import ConditionalFactory from '../operation/conditional'
 import {CastFactory} from '../operation/datatype'
 
+
 const filter = (filtersconf) => {
+    const getValue = (row, operand) => {
+        if(typeof operand === "string" && operand.startsWith("[") && operand.endsWith("]")){
+            const identity = operand.substring(1, operand.length-1)
+            return row[identity]
+        }
+
+        return operand
+    }
     return (row) => {
         let result = false;
         
@@ -19,7 +28,8 @@ const filter = (filtersconf) => {
                     const comparatorFn = ComparatorFactory(col_data_type, compare.operator)
                     const compare_conditionalFn = ConditionalFactory(compare.conditional)
                     const castFn = CastFactory(col_data_type)
-                    conditionResult = compare_conditionalFn(comparatorFn(castFn(row[col_name]), castFn(compare.operand)), conditionResult)
+                    
+                    conditionResult = compare_conditionalFn(comparatorFn(castFn(row[col_name]), castFn(getValue(row, compare.operand))), conditionResult)
                 }
                 const condition_conditionalFn = ConditionalFactory(condition.conditional)
                 result = condition_conditionalFn(result, conditionResult)
